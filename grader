@@ -15,6 +15,9 @@ TL=1 # Time limit (in seconds)
 CPP="g++ -O2 -w -lm" # C++
 C="gcc -O2 -w -lm" # C
 PAS="gpc" # Pascal
+PYTHON="python3" # Python
+
+# TODO: improve python handler
 
 ## ****** END - Configuration ********
 
@@ -53,12 +56,12 @@ NC='\e[0m' # No Color
 
 # Cleanup on exit
 rm -f .overview .compiler_report .time_info .$1.out
-trap "{ rm -f .overview .compiler_report .time_info .$1.out; }" SIGINT SIGTERM EXIT
+trap "{ rm -f .overview .compiler_report .time_info .$1.out a.out; }" SIGINT SIGTERM EXIT
 
 if [ $# -ne 2 ]
 then
 	echo "Usage: $0 source_code test_case_directory"
-	echo "   e.g. $0 test.cpp"
+	echo "   e.g. $0 test.cpp testcases/"
 	echo "   use the above to grade file test.cpp"
 	exit 2
 fi
@@ -77,17 +80,20 @@ then
 fi
 
 # Compilation
-echo -e " ${CYAN}* Compiling source code${NC}";
-echo "$COMPILER" | sh
-if [ $? -ne 0 ]
+if [ "$LANG" != "py" ]
 then
-	echo -e " ${RED}X Compilation Error${NC}";
-	cat .compiler_report;
-	exit 1;
-fi
+    echo -e " ${CYAN}* Compiling source code${NC}";
+    echo "$COMPILER" | sh
+    if [ $? -ne 0 ]
+    then
+            echo -e " ${RED}X Compilation Error${NC}";
+            cat .compiler_report;
+            exit 1;
+    fi
 
-echo -e " ${GREEN}* Successful compilation!${NC}";
-echo
+    echo -e " ${GREEN}* Successful compilation!${NC}";
+    echo
+fi
 
 ulimit -t $TL;
 
@@ -107,7 +113,12 @@ do
 	fi
 	echo -e "${BLUE}Test case $i:${NC}";
 
-	time -p (./a.out < $TEST_CASE_IN > .$1.out) 2> .time_info;
+        if [ "$LANG" != "py" ]
+        then
+            time -p (./a.out < $TEST_CASE_IN > .$1.out) 2> .time_info;
+        else
+            time -p ($PYTHON $1 < $TEST_CASE_IN > .$1.out) 2> .time_info;
+        fi
 
 	EX_CODE=$?;
 	if [ $EX_CODE -eq 137 ]

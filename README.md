@@ -12,19 +12,21 @@ Those are:
 Note: the '#' character in the input/output filename description will be replaced by 1, 2, 3, ... for each test case. For example 'input.#.txt' means that the input files are: input.1.txt , input.2.txt , ... up to the maximum numbered test case existing in the current directory.
 
 Quick Install
-=====
+=============
 
 Run the following commands in your terminal:
 
-> wget https://raw.githubusercontent.com/wdsrocha/grader/master/grader.sh
-> chmod +x grader.sh
+```sh
+wget https://raw.githubusercontent.com/wdsrocha/grader/master/grader
+chmod +x grader
+```
 
 Usage
 =====
 
 Just run the script with two parameterers, the source code filename and the directory containing the test cases. 
 
-Example: ./grader.sh test.cpp testcases/
+Example: ./grader test.cpp testcases/
 
 The above command will first compile test.cpp and then run the executable for each test case of the form described by the user.
 After each run (and if the program terminates with exit code 0 within the time limit), the output is judged based on the given correct output files.
