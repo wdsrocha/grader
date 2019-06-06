@@ -1,12 +1,12 @@
 #!/bin/bash
-## Version 2.3
 
 ## ****** BEGIN - Configuration *******
 
 # Input/Output format
 # '#' will be replaced by 1, 2, ...
-IN="input.#.txt"
-OUT="output.#.txt"
+fileroot="${2}"
+IN="${fileroot}/#.in"
+OUT="${fileroot}/#.out"
 
 # Limits
 TL=1 # Time limit (in seconds)
@@ -55,9 +55,9 @@ NC='\e[0m' # No Color
 rm -f .overview .compiler_report .time_info .$1.out
 trap "{ rm -f .overview .compiler_report .time_info .$1.out; }" SIGINT SIGTERM EXIT
 
-if [ $# -ne 1 ]
+if [ $# -ne 2 ]
 then
-	echo "Usage: $0 source_code"
+	echo "Usage: $0 source_code test_case_directory"
 	echo "   e.g. $0 test.cpp"
 	echo "   use the above to grade file test.cpp"
 	exit 2
@@ -149,6 +149,6 @@ fi
 echo -n "$CORRECT / $N"
 if [ $CORRECT -eq $N ]
 then
-	echo -en "   ${GREEN}AWWW YEAH :D${NC}"
+	echo -en "   ${GREEN}Accepted!${NC}"
 fi
 echo
